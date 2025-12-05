@@ -1,16 +1,50 @@
-# React + Vite
+# Frontend - Cyber Attack Monitoring Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This frontend is built using React and is designed to visualize real‑time cyber‑attack data collected by the backend API.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1. Real-Time Attack Count
+Displays the total number of recorded attacks by continuously polling the backend API.
 
-## React Compiler
+### 2. Live Attack List
+Shows every attack entry (IP, timestamp, attack type, status) in a clean table layout.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 3. Auto-Refresh Every Few Seconds
+Uses a polling mechanism (`setInterval`) to automatically fetch updated data without needing to refresh the page manually.
 
-## Expanding the ESLint configuration
+### 4. Modular Component-Based UI
+The project follows a proper folder structure:
+- `components/` for reusable UI elements  
+- `pages/` for main screens  
+- `api/` for backend API integration  
+- `hooks/` for custom logic like polling  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 5. Environment-Based API Config
+The API base URL comes from `.env`:
+
+### 6. Error Handling and Loading Indicators
+Shows a loader when fetching data and displays clear error messages if the backend is unreachable.
+
+### 7. Fully Ready for Deployment
+Compatible with Netlify, Vercel, and GitHub Pages.
+
+## How It Works
+
+The frontend fetches data from your backend using:
+- Standard REST API requests (`fetch` or `axios`)
+- Repeated polling to update the UI every 3–5 seconds
+
+Example polling logic:
+```js
+useEffect(() => {
+  const fetchData = async () => {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/attacks`);
+    setAttacks(res.data);
+  };
+
+  fetchData();
+  const interval = setInterval(fetchData, 3000);
+
+  return () => clearInterval(interval);
+}, []);
