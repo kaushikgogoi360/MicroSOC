@@ -1,37 +1,35 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Login() {
+function SignUp() {
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("user");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch("http://localhost:5000/api/auth/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, role }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data?.message || "Invalid Email or Password");
+        alert(data?.message || "Signup failed");
         return;
       }
 
-      // Save JWT token
-      localStorage.setItem("token", data.token);
-
-      alert("Login Successful!");
-      navigate("/dashboard"); // redirect to dashboard
+      alert("Signup Successful!");
+      navigate("/"); // Go to login page
     } catch (err) {
-      alert("Something went wrong. Check your backend server.");
+      alert("Something went wrong!");
       console.error(err);
     }
   };
@@ -39,9 +37,18 @@ function Login() {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h2 style={styles.title}>Login</h2>
+        <h2 style={styles.title}>Sign Up</h2>
 
-        <form onSubmit={handleLogin} style={styles.form}>
+        <form onSubmit={handleSignup} style={styles.form}>
+          <label style={styles.label}>Name</label>
+          <input
+            type="text"
+            required
+            value={name}
+            style={styles.input}
+            onChange={(e) => setName(e.target.value)}
+          />
+
           <label style={styles.label}>Email</label>
           <input
             type="email"
@@ -60,21 +67,29 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
+          <label style={styles.label}>Role</label>
+          <select
+            style={styles.input}
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="user">User</option>
+            <option value="analyst">Analyst</option>
+            <option value="admin">Admin</option>
+          </select>
+
           <button type="submit" style={styles.button}>
+            Sign Up
+          </button>
+
+          <button
+            type="button"
+            style={{ ...styles.button, background: "#777" }}
+            onClick={() => navigate("/")}
+          >
             Login
           </button>
         </form>
-
-        {/* Add Signup Link */}
-        <p style={{ marginTop: "10px", textAlign: "center" }}>
-          Don’t have an account?{" "}
-          <span
-            style={{ color: "#4A80F0", cursor: "pointer", fontWeight: "600" }}
-            onClick={() => navigate("/signup")}
-          >
-            Sign Up
-          </span>
-        </p>
       </div>
     </div>
   );
@@ -140,4 +155,4 @@ const styles = {
   },
 };
 
-export default Login;
+export default SignUp;
