@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Login() {
+function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data?.message || "Invalid Email or Password");
+        alert(data.message || "Invalid email or password");
         return;
       }
 
@@ -29,10 +29,10 @@ function Login() {
       localStorage.setItem("token", data.token);
 
       alert("Login Successful!");
-      navigate("/dashboard"); // redirect to dashboard
+      navigate("/dashboard"); // go to dashboard after login
     } catch (err) {
-      alert("Something went wrong. Check your backend server.");
       console.error(err);
+      alert("Server error. Check your backend.");
     }
   };
 
@@ -63,18 +63,15 @@ function Login() {
           <button type="submit" style={styles.button}>
             Login
           </button>
-        </form>
 
-        {/* Add Signup Link */}
-        <p style={{ marginTop: "10px", textAlign: "center" }}>
-          Don’t have an account?{" "}
-          <span
-            style={{ color: "#4A80F0", cursor: "pointer", fontWeight: "600" }}
+          <button
+            type="button"
+            style={{ ...styles.button, background: "#777" }}
             onClick={() => navigate("/signup")}
           >
-            Sign Up
-          </span>
-        </p>
+            Go to Signup
+          </button>
+        </form>
       </div>
     </div>
   );
@@ -140,4 +137,4 @@ const styles = {
   },
 };
 
-export default Login;
+export default LoginPage;
