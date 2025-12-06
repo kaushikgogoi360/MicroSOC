@@ -4,7 +4,13 @@ import { useNavigate } from "react-router-dom";
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [toast, setToast] = useState({ message: "", type: "" }); // new
   const navigate = useNavigate();
+
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast({ message: "", type: "" }), 3000);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,18 +27,18 @@ function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message || "Invalid email or password");
+        showToast(data.message || "Invalid email or password", "error");
         return;
       }
 
       // Save JWT token
       localStorage.setItem("token", data.token);
 
-      alert("Login Successful!");
-      navigate("/dashboard"); // go to dashboard after login
+      showToast("Login Successful!", "success");
+      navigate("/dashboard");
     } catch (err) {
       console.error(err);
-      alert("Server error. Check your backend.");
+      showToast("Server error. Check your backend.", "error");
     }
   };
 
@@ -73,6 +79,20 @@ function LoginPage() {
           </button>
         </form>
       </div>
+
+      {/* Toast Notification */}
+      {toast.message && (
+        <div
+          style={{
+            ...styles.toast,
+            ...(toast.type === "success"
+              ? styles.toastSuccess
+              : styles.toastError),
+          }}
+        >
+          {toast.message}
+        </div>
+      )}
     </div>
   );
 }
@@ -84,6 +104,7 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     background: "#f0f2f5",
+    position: "relative",
   },
 
   card: {
@@ -135,6 +156,47 @@ const styles = {
     fontWeight: "600",
     transition: "0.2s",
   },
+
+  // Toast Styles
+  toast: {
+    position: "fixed",
+    top: "20px",
+    right: "20px",
+    padding: "15px 25px",
+    borderRadius: "8px",
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: "14px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+    animation: "slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards",
+    zIndex: 999,
+  },
+
+  toastSuccess: {
+    background: "#4BB543",
+  },
+
+  toastError: {
+    background: "#FF4C4C",
+  },
 };
+
+// Keyframe animations
+const styleSheet = document.styleSheets[0];
+styleSheet.insertRule(
+  `
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}`,
+  styleSheet.cssRules.length
+);
+styleSheet.insertRule(
+  `
+@keyframes fadeOut {
+  to { transform: translateX(100%); opacity: 0; }
+}`,
+  styleSheet.cssRules.length
+);
 
 export default LoginPage;

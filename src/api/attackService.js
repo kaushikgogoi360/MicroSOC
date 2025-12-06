@@ -6,7 +6,7 @@ function getAuthHeader() {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-// 1️⃣ Get all attacks
+// 1️Get all attacks
 export async function getAllAttacks() {
   try {
     const res = await fetch(API_BASE, {
@@ -27,7 +27,7 @@ export async function getAllAttacks() {
   }
 }
 
-// 2️⃣ Get attack by ID
+// 2 Get attack by ID
 export async function getAttackById(id) {
   try {
     const res = await fetch(`${API_BASE}/${id}`, {
@@ -48,7 +48,7 @@ export async function getAttackById(id) {
   }
 }
 
-// 3️⃣ Create a new attack (optional if needed)
+//  Create a new attack (optional if needed)
 export async function createAttack(data) {
   try {
     const res = await fetch(API_BASE, {
