@@ -20,4 +20,9 @@
 .loader {
   text-align: center;
   margin-top: 40px;
+} 
+.page {
+  margin-left: 240px;   
+  padding: 20px;
 }
+
