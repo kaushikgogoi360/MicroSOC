@@ -6,26 +6,51 @@ import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import Login from "./pages/LoginPage";
 import SignUp from "./pages/Signup";
+import ProtectedRoute from "./ProtectedRoute";
 
 function Layout() {
   const location = useLocation();
 
-  // hide navbar on login page
   const hideNavbar =
     location.pathname === "/" || location.pathname === "/signup";
 
   return (
     <>
       {!hideNavbar && <Navbar />}
-      <Routes>
-        {/* Login will be FIRST PAGE now */}
-        <Route path="/" element={<Login />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
+      <Routes>
+        {/* PUBLIC ROUTES */}
+        <Route path="/" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        <Route path="/attacks" element={<AttackList />} />
-        <Route path="/attacks/:id" element={<AttackDetails />} />
+        {/* PROTECTED ROUTES */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/attacks"
+          element={
+            <ProtectedRoute>
+              <AttackList />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/attacks/:id"
+          element={
+            <ProtectedRoute>
+              <AttackDetails />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

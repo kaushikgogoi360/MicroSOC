@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [toast, setToast] = useState({ message: "", type: "" }); // new
+  const [toast, setToast] = useState({ message: "", type: "" });
   const navigate = useNavigate();
 
   const showToast = (message, type = "success") => {
@@ -31,9 +31,7 @@ function LoginPage() {
         return;
       }
 
-      // Save JWT token
       localStorage.setItem("token", data.token);
-
       showToast("Login Successful!", "success");
       navigate("/dashboard");
     } catch (err) {
@@ -44,9 +42,12 @@ function LoginPage() {
 
   return (
     <div style={styles.container}>
+      {/* Top Center Title */}
+      <div style={styles.topText}>SOC by CODESPARK</div>
+
+      {/* Login Card */}
       <div style={styles.card}>
         <h2 style={styles.title}>Login</h2>
-
         <form onSubmit={handleLogin} style={styles.form}>
           <label style={styles.label}>Email</label>
           <input
@@ -56,7 +57,6 @@ function LoginPage() {
             style={styles.input}
             onChange={(e) => setEmail(e.target.value)}
           />
-
           <label style={styles.label}>Password</label>
           <input
             type="password"
@@ -65,11 +65,9 @@ function LoginPage() {
             style={styles.input}
             onChange={(e) => setPassword(e.target.value)}
           />
-
           <button type="submit" style={styles.button}>
             Login
           </button>
-
           <button
             type="button"
             style={{ ...styles.button, background: "#777" }}
@@ -79,6 +77,9 @@ function LoginPage() {
           </button>
         </form>
       </div>
+
+      {/* Bottom Left Footer */}
+      <div style={styles.bottomText}>CODESPARK 2025</div>
 
       {/* Toast Notification */}
       {toast.message && (
@@ -100,11 +101,32 @@ function LoginPage() {
 const styles = {
   container: {
     height: "100vh",
+    width: "100%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "#f0f2f5",
+    background: "linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)",
     position: "relative",
+    flexDirection: "column",
+  },
+
+  topText: {
+    position: "absolute",
+    top: "20px",
+    textAlign: "center",
+    width: "100%",
+    fontSize: "24px",
+    fontWeight: "700",
+    color: "#fff",
+  },
+
+  bottomText: {
+    position: "absolute",
+    bottom: "20px",
+    left: "20px",
+    fontSize: "14px",
+    fontWeight: "600",
+    color: "#fff",
   },
 
   card: {
@@ -113,6 +135,7 @@ const styles = {
     borderRadius: "12px",
     background: "#fff",
     boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+    zIndex: 1,
   },
 
   title: {
@@ -172,30 +195,18 @@ const styles = {
     zIndex: 999,
   },
 
-  toastSuccess: {
-    background: "#4BB543",
-  },
-
-  toastError: {
-    background: "#FF4C4C",
-  },
+  toastSuccess: { background: "#4BB543" },
+  toastError: { background: "#FF4C4C" },
 };
 
 // Keyframe animations
 const styleSheet = document.styleSheets[0];
 styleSheet.insertRule(
-  `
-@keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}`,
+  `@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }`,
   styleSheet.cssRules.length
 );
 styleSheet.insertRule(
-  `
-@keyframes fadeOut {
-  to { transform: translateX(100%); opacity: 0; }
-}`,
+  `@keyframes fadeOut { to { transform: translateX(100%); opacity: 0; } }`,
   styleSheet.cssRules.length
 );
 
